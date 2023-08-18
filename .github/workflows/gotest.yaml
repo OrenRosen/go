@@ -25,6 +25,10 @@ jobs:
           go tool cover -func=coverage.out -o=coverage.out
 
       - name: Go Coverage Badge  # Pass the `coverage.out` output to this action
+        id: coverage-badge
         uses: tj-actions/coverage-badge-go@v2
         with:
           filename: ./async/coverage.out
+
+      - name: Set up Coverage Badge URL
+        run: echo "COVERAGE_BADGE_URL=${{ steps.coverage-badge.outputs.badge_url }}" >> $GITHUB_ENV
