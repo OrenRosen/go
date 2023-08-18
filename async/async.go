@@ -121,5 +121,3 @@ type defaultErrorHandler struct {
 func (_ defaultErrorHandler) HandleError(ctx context.Context, err error) {
 	fmt.Printf("async error: %+v\n", err)
 }
-
-///
