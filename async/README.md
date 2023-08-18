@@ -1,7 +1,8 @@
 # Package gosync
 
-[![Build Status](https://github.com/OrenRosen/async/actions/workflows/merge.yaml/badge.svg?branch=main)](https://github.com/OrenRosen/async/blob/main/.github/workflows/merge.yaml)
-[![Go Reference](https://pkg.go.dev/badge/github.com/OrenRosen/async.svg)](https://pkg.go.dev/github.com/OrenRosen/async)
+[![Build Status](https://github.com/OrenRosen/go/actions/workflows/merge.yaml/badge.svg?branch=main)](https://github.com/OrenRosen/go/blob/main/.github/workflows/merge.yaml)
+![Coverage](https://img.shields.io/badge/Coverage-77.8%25-brightgreen)
+[![Go Reference](https://pkg.go.dev/badge/github.com/OrenRosen/go/async.svg)](https://pkg.go.dev/github.com/OrenRosen/go/async)
 
 Package `async` provides simple helpers for running code in a go routine.
 
@@ -28,7 +29,7 @@ import (
 	"fmt"
 	"time"
 	
-	"github.com/OrenRosen/async"
+	"github.com/OrenRosen/go/async"
 )
 
 func main() {
@@ -59,7 +60,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/OrenRosen/async"
+	"github.com/OrenRosen/go/async"
 )
 
 func main() {
@@ -203,3 +204,4 @@ Now, every time you will call `a.RunAsync`, you will have this value in the pass
 
 
 
+// 
