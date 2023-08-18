@@ -4,20 +4,21 @@
 ![Coverage](https://img.shields.io/badge/Coverage-77.8%25-brightgreen)
 [![Go Reference](https://pkg.go.dev/badge/github.com/OrenRosen/go/async.svg)](https://pkg.go.dev/github.com/OrenRosen/go/async)
 
-Package `async` provides simple helpers for running code in a go routine.
+
+Package `async` provides simple wrapper for running code in a goroutine. - you can read about it more in here: https://orenrose.medium.com/goroutine-wrapper-for-recover-and-context-propagation-54dc571ac0f4
 
 ### Main features (or why to use this package instead of just `go func`):
-- Limiting the number of opened go routines.
+- Limiting the number of opened goroutines.
 - Recovering from a panic.
-- Prevent cancellation from propagate to the go routine
+- Prevent cancellation from propagate to the goroutine
 - Propagate values between contexts.
 - Configurable timeouts.
 - Handling errors from the async function.
 
 # Simple Use-Cases:
 
-### Run function in a new go routine
-The most basic functionality is to open a new go routine when everytime it is called:
+### Run function in a new goroutine
+The most basic functionality is to open a new goroutine when everytime it is called:
 
 Example:
 
@@ -36,7 +37,7 @@ func main() {
 	// initialize the async helper
 	a := async.New()
 	
-	// call `a.RunAsync` with a context and a closure, which will be run in a new go routine
+	// call `a.RunAsync` with a context and a closure, which will be run in a new goroutine
 	a.RunAsync(context.Background(), func(ctx context.Context) error {
 		fmt.Println("Running in async")
 		return nil
@@ -48,9 +49,9 @@ func main() {
 }
 ```
 
-### Run a function in a pool of go routines
+### Run a function in a pool of goroutines
 
-This use-case is for cases you know you have a lot of traffic, and you would not like to open a new go routine for each call. Instead, it initializes a pool of go routines, which are ready to handle an incoming function:
+This use-case is for cases you know you have a lot of traffic, and you would not like to open a new goroutine for each call. Instead, it initializes a pool of goroutines, which are ready to handle an incoming function:
 
 ```go
 package main
@@ -65,7 +66,7 @@ import (
 
 func main() {
 	// initialize the pool
-	// open 10 go routine, in each go routine a worker is listens on a channel for a received function 
+	// open 10 goroutine, in each goroutine a worker is listens on a channel for a received function 
 	pool := async.NewPool()
 	
 	// call `pool.RunAsync` with a context and a closure.
@@ -98,34 +99,34 @@ type Asyncer interface {
     RunAsync(ctx context.Context, fn func(ctx context.Context) error)
 }
 ```
-When `RunAsync` is called, it opens a new go routine, and executes `fn`.
+When `RunAsync` is called, it opens a new goroutine, and executes `fn`.
 
 ## AsyncOption
 You can pass options to the initializer for custom configuration. The available options are
 
-#### Max opened go routines
+#### Max opened goroutines
 ```go
 func WithMaxGoRoutines(n uint) AsyncOption
 ```
-Use this option for setting the max go routine that `Async` will open. If `RunAsync` is called when there are already max go routines open, it waits for a go routine to be finished before opening a new go routine.
+Use this option for setting the max goroutine that `Async` will open. If `RunAsync` is called when there are already max goroutines open, it waits for a goroutine to be finished before opening a new goroutine.
 
-There is a default timeout for waiting to a go routine to be finished of 5 seconds. You can change this time with another option
+There is a default timeout for waiting to a goroutine to be finished of 5 seconds. You can change this time with another option
 
 - The default for this option is 100
 
-#### Timeout to wait for go routine to be finished
+#### Timeout to wait for goroutine to be finished
 ```go
 func WithTimeoutForGuard(t time.Duration) AsyncOption
 ```
-Use this option in order to set the timeout which `Async` waits when there are max go routines open.
+Use this option in order to set the timeout which `Async` waits when there are max goroutines open.
 
 - The default for this option is 5 seconds.
 
-#### Max time for a go routine to run
+#### Max time for a goroutine to run
 ```go
 func WithTimeoutForGoRoutine(t time.Duration) AsyncOption
 ```
-Use this option to set the max time that a go routine is running. This is basically the timeout for the function that is passed in `RunAsync`.  
+Use this option to set the max time that a goroutine is running. This is basically the timeout for the function that is passed in `RunAsync`.  
 - The default for this option is 5 seconds.
 
 
@@ -153,13 +154,13 @@ There are cases though, you want to propagate a value, to be used in the passed 
 For more info, you look at the examples and tests. 
 
 # Propagation Example
-As been said, when you start a function in the background, in a different go routine you can't use the same context. This is because the cancellation of the original context shouldn't affect your async function to run properly. The package `async` takes care and passes other context into the go routine.
+As been said, when you start a function in the background, in a different goroutine you can't use the same context. This is because the cancellation of the original context shouldn't affect your async function to run properly. The package `async` takes care and passes other context into the goroutine.
 
 Let's say you have a traceID as a value in the context. The traceID is usually should passed all around the flow, so you want to have it also in the function you pass to the `RunAsync` method.
 To do that, when starting the async (or the pool), you can pass ContextPropagator to do exactly that:
 ```go
 // ContextPropagator is used for moving values from the ctx into the new context.
-// This is in order to preserve needed values between the context when initializing a new go routine.
+// This is in order to preserve needed values between the context when initializing a new goroutine.
 type ContextPropagator interface {
     MoveToContext(from, to context.Context) context.Context
 }

@@ -19,7 +19,7 @@ func (f ErrorFunc) HandleError(ctx context.Context, err error) {
 }
 
 // ContextPropagator is used for moving values from the ctx into the new context.
-// This is in order to preserve needed values between the context when initializing a new go routine.
+// This is in order to preserve needed values between the context when initializing a new goroutine.
 type ContextPropagator interface {
 	MoveToContext(from, to context.Context) context.Context
 }

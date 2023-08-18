@@ -41,7 +41,7 @@ func WithMaxGoRoutines(n uint) AsyncOption {
 }
 
 // WithContextPropagation adds a context propagator. A propagator is used to move values from the received context to the new context
-// Use this in order to preserve needed values between the contexts when initializing a new go routine.
+// Use this in order to preserve needed values between the contexts when initializing a new goroutine.
 func WithContextPropagation(contextPropagator ContextPropagator) AsyncOption {
 	return func(conf *Config) {
 		conf.contextPropagators = append(conf.contextPropagators, contextPropagator)
@@ -82,7 +82,7 @@ func WithPoolErrorHandler(errorHandler ErrorHandler) PoolOption {
 	}
 }
 
-// WithPoolNumberOfWorkers limits the workers number. Each worker is listening to a received data on a different go routine.
+// WithPoolNumberOfWorkers limits the workers number. Each worker is listening to a received data on a different goroutine.
 func WithPoolNumberOfWorkers(n int) PoolOption {
 	return func(conf *PoolConfig) {
 		conf.numberOfWorkers = n
