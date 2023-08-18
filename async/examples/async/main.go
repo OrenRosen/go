@@ -17,7 +17,7 @@ func main() {
 		})),
 	)
 
-	// context with cancel, so we will see that cancelling the context from outside doesn't affect the inner go routine
+	// context with cancel, so we will see that cancelling the context from outside doesn't affect the inner goroutine
 	ctx, cancelFunc := context.WithCancel(context.Background())
 	ctx = context.WithValue(ctx, "SomeKey", "SomeValue")
 
@@ -38,7 +38,7 @@ func main() {
 
 	fmt.Println("Canceling the original context")
 	cancelFunc()
-	fmt.Println("Waiting for go routine to finish...")
+	fmt.Println("Waiting for goroutine to finish...")
 	_ = <-ch
 
 	fmt.Println("Finished")
