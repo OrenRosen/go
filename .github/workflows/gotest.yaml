@@ -21,4 +21,10 @@ jobs:
         working-directory: ./async
         run: |
           go build -v ./...
-          go test -v ./...
+          go test -v ./... -covermode=count -coverprofile=coverage.out
+          go tool cover -func=coverage.out -o=coverage.out
+
+      - name: Go Coverage Badge  # Pass the `coverage.out` output to this action
+        uses: tj-actions/coverage-badge-go@v2
+        with:
+          filename: coverage.out
