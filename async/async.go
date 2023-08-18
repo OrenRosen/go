@@ -54,11 +54,11 @@ func New(options ...AsyncOption) *Async {
 		timeoutForGuard:     defaultTimeoutForGuard,
 		timeoutForGoRoutine: defaultTimeoutForGoRoutine,
 	}
-
+	
 	for _, op := range options {
 		op(&conf)
 	}
-
+	
 	return &Async{
 		guard:               make(chan struct{}, conf.maxGoRoutines),
 		errorHandler:        conf.errorHandler,
@@ -70,25 +70,25 @@ func New(options ...AsyncOption) *Async {
 
 func (a *Async) RunAsync(ctx context.Context, fn HandleFunc) {
 	ctx = asyncContext(ctx, a.contextPropagators)
-
+	
 	select {
 	case a.guard <- struct{}{}:
 		go func() {
 			ctx, cacnelFunc := context.WithTimeout(ctx, a.timeoutForGoRoutine)
-
+			
 			var err error
 			defer func() {
 				cacnelFunc()
 				<-a.guard
 			}()
-
+			
 			defer recoverPanic(ctx, a.errorHandler)
-
+			
 			if err = fn(ctx); err != nil {
 				a.errorHandler.HandleError(ctx, fmt.Errorf("async func failed: %w", err))
 			}
 		}()
-
+	
 	case <-time.After(a.timeoutForGuard):
 		a.errorHandler.HandleError(ctx, errorTimeout(fmt.Errorf("async timeout while waiting to guard")))
 	}
@@ -96,11 +96,11 @@ func (a *Async) RunAsync(ctx context.Context, fn HandleFunc) {
 
 func asyncContext(ctx context.Context, contextPropagators []ContextPropagator) context.Context {
 	newCtx := context.Background()
-
+	
 	for _, propagator := range contextPropagators {
 		newCtx = propagator.MoveToContext(ctx, newCtx)
 	}
-
+	
 	return newCtx
 }
 
@@ -110,7 +110,7 @@ func recoverPanic(ctx context.Context, errorHandler ErrorHandler) {
 		if !ok {
 			err = fmt.Errorf("%v", r)
 		}
-
+		
 		errorHandler.HandleError(ctx, fmt.Errorf("async recoverPanic: %w", err))
 	}
 }
@@ -121,3 +121,5 @@ type defaultErrorHandler struct {
 func (_ defaultErrorHandler) HandleError(ctx context.Context, err error) {
 	fmt.Printf("async error: %+v\n", err)
 }
+
+///
