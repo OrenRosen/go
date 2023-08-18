@@ -28,7 +28,7 @@ import (
 	"fmt"
 	"time"
 	
-	"github.com/OrenRosen/async"
+	"github.com/OrenRosen/go/async"
 )
 
 func main() {
@@ -59,7 +59,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/OrenRosen/async"
+	"github.com/OrenRosen/go/async"
 )
 
 func main() {
