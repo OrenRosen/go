@@ -1,6 +1,9 @@
 name: Go package
 
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - 'async/**'
 
 jobs:
   build:
@@ -14,8 +17,8 @@ jobs:
         with:
           go-version: '1.19'
 
-      - name: Build
-        run: go build -v ./...
-
-      - name: Test
-        run: go test -v ./...
+      - name: Build and Test
+        working-directory: ./async
+        run: |
+          go build -v ./...
+          go test -v ./...
